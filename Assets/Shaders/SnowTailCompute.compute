@@ -1,0 +1,36 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+#pragma kernel FillWhite
+#pragma kernel DrawTrail
+
+// Create a RenderTexture with enableRandomWrite flag and set it
+// with cs.SetTexture
+RWTexture2D<float4> SnowTexture;
+float TrailRadius;
+float2 Postion;
+float SnowFillAmount;
+
+[numthreads(8,8,1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+    // Fills in the trail made by the player
+    SnowTexture[id.xy] += float4(SnowFillAmount, SnowFillAmount, SnowFillAmount, SnowFillAmount);
+}
+
+[numthreads(8, 8, 1)]
+void FillWhite(uint3 id : SV_DispatchThreadID)
+{
+    // Called once at start to make texture completely white
+    SnowTexture[id.xy] = float4(1.0, 1.0, 1.0, 1.0);
+}
+
+[numthreads(8, 8, 1)]
+void DrawTrail(uint3 id : SV_DispatchThreadID)
+{
+    // Draws trail based on the distance between the texel and player
+    
+    float trail = distance(id.xy, Postion.xy);
+    
+    if (trail < TrailRadius)
+        SnowTexture[id.xy] = float4(trail, trail, trail, trail);
+}
