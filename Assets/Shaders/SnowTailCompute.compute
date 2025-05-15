@@ -7,8 +7,9 @@
 // with cs.SetTexture
 RWTexture2D<float4> SnowTexture;
 float TrailRadius;
-float2 Postion;
+float2 Position;
 float SnowFillAmount;
+float Resolution;
 
 [numthreads(8,8,1)]
 void CSMain (uint3 id : SV_DispatchThreadID)
@@ -29,7 +30,7 @@ void DrawTrail(uint3 id : SV_DispatchThreadID)
 {
     // Draws trail based on the distance between the texel and player
     
-    float trail = distance(id.xy, Postion.xy);
+    float trail = distance(id.xy / Resolution, Position.xy / Resolution);
     
     if (trail < TrailRadius)
         SnowTexture[id.xy] = float4(trail, trail, trail, trail);
