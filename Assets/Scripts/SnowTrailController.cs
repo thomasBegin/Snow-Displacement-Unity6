@@ -53,7 +53,7 @@ public class SnowTrailController : MonoBehaviour
         }
 
         // Sets up trail texture on GO to view path
-        _goMesh.material.SetTexture("TrailPathTexture", _snowTrailTexture);
+        _goMesh.material.SetTexture("_PathText", _snowTrailTexture);
 
         //Sets up compute shader and texture
         SetComputeShaderProperies();
