@@ -4,7 +4,9 @@ Shader "Custom/SnowUnlitShader"
     Properties
     {
         _Tess ("Tessellation factor", Range(1, 20)) = 10
+
         _PathText ("Trail Path Texture", 2D) = "white" {}
+        _BaseH("Base mesh height", float) = 0.0
     }
     SubShader
     {
@@ -27,6 +29,7 @@ Shader "Custom/SnowUnlitShader"
             #pragma fragment frag
 
             sampler2D _PathText;
+            float _BaseH;
 
             // Before tessellation vert program
             ControlPoint vert(Attributes v)
@@ -46,6 +49,9 @@ Shader "Custom/SnowUnlitShader"
             {
                 Varyings output;
 
+                float4 snowPath = tex2Dlod(_PathText, float4(v.uv, 0.0, 0.0));
+
+                v.vertex.xyz += (normalize(v.normal) * snowPath.r) + float3(0.0, _BaseH, 0.0);
                 output.vertex = TransformObjectToHClip(v.vertex.xyz);
                 output.normal = v.normal;
                 output.uv = v.uv;

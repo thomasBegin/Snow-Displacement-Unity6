@@ -27,14 +27,16 @@ public class SnowTrailController : MonoBehaviour
     [SerializeField] private ComputeShader _snowCompute;
     [SerializeField] private RenderTexture _snowTrailTexture;
     [SerializeField] private MeshRenderer _goMesh;
+    [SerializeField] private MeshRenderer _trailingEntity;
 
     [Header("Properties")]
-    [SerializeField] private float _trailRadius;
+    [SerializeField] private float _snowTrailScale = 1.0f;
     [SerializeField] private float _snowFillAmount;
     [SerializeField] private float _snowFillRate;
 
     private int _textureRes => _snowTrailTexture.width; // Needs to be a square texture (TODO: Any size texture)
     private float _goWidth => _goMesh.bounds.size.x; // Needs to be a square GO (TODO: Any size GO)
+    private float _trailRadius => (_trailingEntity.bounds.size.x / _goWidth) / 2.0f;
 
     private Vector2 _trailPos;
 
@@ -72,7 +74,7 @@ public class SnowTrailController : MonoBehaviour
         _snowCompute.SetTexture(drawTrail_kernelID, SNOW_TEXTURE_PROPERTY, _snowTrailTexture);
 
         // Other properties
-        _snowCompute.SetFloat(TRAIL_RADIUS_PROPERTY, _trailRadius);
+        _snowCompute.SetFloat(TRAIL_RADIUS_PROPERTY, _trailRadius * _snowTrailScale);
         _snowCompute.SetFloat(SNOW_FILL_AMOUNT_PROPERTY, _snowFillAmount);
         _snowCompute.SetFloat(RESOLUTION_PROPERTY, _textureRes);
     }
@@ -101,6 +103,7 @@ public class SnowTrailController : MonoBehaviour
         _trailPos.y = (_textureRes / 2) - (((pos.z - transform.position.z) * (_textureRes / 2)) / (_goWidth / 2));
 
         // Calls draw trail method from compute shader
+        _snowCompute.SetFloat(TRAIL_RADIUS_PROPERTY, _trailRadius * _snowTrailScale);
         _snowCompute.SetVector(POSITION_PROPERTY, _trailPos);
         _snowCompute.Dispatch(drawTrail_kernelID, _textureRes / 8, _textureRes / 8, 1);
     }
