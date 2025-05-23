@@ -26,7 +26,7 @@ public class SnowTrailController : MonoBehaviour
     [Header("Components")]
     [SerializeField] private ComputeShader _snowCompute;
     [SerializeField] private RenderTexture _snowTrailTexture;
-    [SerializeField] private MeshRenderer _goMesh;
+    [SerializeField] private MeshRenderer _snowMesh;
     [SerializeField] private MeshRenderer _trailingEntity;
 
     [Header("Properties")]
@@ -35,7 +35,7 @@ public class SnowTrailController : MonoBehaviour
     [SerializeField] private float _snowFillRate;
 
     private int _textureRes => _snowTrailTexture.width; // Needs to be a square texture (TODO: Any size texture)
-    private float _goWidth => _goMesh.bounds.size.x; // Needs to be a square GO (TODO: Any size GO)
+    private float _goWidth => _snowMesh.bounds.size.x; // Needs to be a square GO (TODO: Any size GO)
     private float _trailRadius => (_trailingEntity.bounds.size.x / _goWidth) / 2.0f;
 
     private Vector2 _trailPos;
@@ -55,7 +55,7 @@ public class SnowTrailController : MonoBehaviour
         }
 
         // Sets up trail texture on GO to view path
-        _goMesh.material.SetTexture("_PathText", _snowTrailTexture);
+        _snowMesh.material.SetTexture("_PathText", _snowTrailTexture);
 
         //Sets up compute shader and texture
         SetComputeShaderProperies();
