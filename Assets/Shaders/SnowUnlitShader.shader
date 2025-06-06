@@ -6,7 +6,10 @@ Shader "Custom/SnowUnlitShader"
         _Tess ("Tessellation factor", Range(1, 20)) = 10
 
         _PathText ("Trail Path Texture", 2D) = "white" {}
-        _BaseH("Base mesh height", float) = 0.0
+        _BaseH("Base snow height", float) = 0.0
+        _NoiseText ("Snow height variation", 2D) = "white" {}
+        _NoiseWeight ("Snow height variation weight", float) = 1.0
+        _SnowText ("Snow texture", 2D) = "white" {}
     }
     SubShader
     {
@@ -30,6 +33,9 @@ Shader "Custom/SnowUnlitShader"
 
             sampler2D _PathText;
             float _BaseH;
+            sampler2D _NoiseText;
+            float _NoiseWeight;
+            sampler2D _SnowText;
 
             // Before tessellation vert program
             ControlPoint vert(Attributes v)
@@ -50,8 +56,9 @@ Shader "Custom/SnowUnlitShader"
                 Varyings output;
 
                 float4 snowPath = tex2Dlod(_PathText, float4(v.uv, 0.0, 0.0));
+                float4 snowHeightNoise = tex2Dlod(_NoiseText, float4(v.uv, 0.0, 0.0));
 
-                v.vertex.xyz += (normalize(v.normal) * snowPath.r) + float3(0.0, _BaseH, 0.0);
+                v.vertex.xyz += (normalize(v.normal) * snowPath.r) * float3(0.0, _BaseH + (snowHeightNoise.r * _NoiseWeight), 0.0);
                 output.vertex = TransformObjectToHClip(v.vertex.xyz);
                 output.normal = v.normal;
                 output.uv = v.uv;
@@ -77,7 +84,7 @@ Shader "Custom/SnowUnlitShader"
             // Frag program
             half4 frag(Varyings f) : SV_Target
             {
-                return tex2D(_PathText, f.uv);
+                return tex2D(_SnowText, f.uv);
             }
 
             ENDHLSL
