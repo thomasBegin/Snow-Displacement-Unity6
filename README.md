@@ -51,15 +51,15 @@ This is a personal project of a snow trailing system made to learn shaders in Un
 ### How it works
 
 #### Compute shader
-At the root of everything is the compute shader "SnowTrailCompute.compute". It's used to draw a black circle representing the player current position on a predetemined white texture. The addition of those positions creates a black trail on the base texture.
+At the root of everything is the compute shader "SnowTrailCompute.compute". It's used to draw a black circle representing the player current position on a predetermined white texture. The addition of those positions creates a black trail on the base texture.
 
 
 #### Tessellation
-To make sure the trail is well defined on the object's mesh, a tessellation step was added in "SnowTessellation.hlsl". A tessellation factor is exposed in the Unity inspector to allow the user to better control the tessellation level, and in doing so, the trail resolution.
+To make sure the trail is well-defined on the object's mesh, a tessellation step was added in "SnowTessellation.hlsl". A tessellation factor is exposed in the Unity inspector to allow the user to better control the tessellation level, and in doing so, the trail resolution.
 
 
 #### Unlit Shader
-Everything is then assembled in "SnowUnlitShader.shader". In the vertex shader, the texture that was drawn on by the compute shader is used to define the vertex height. Creating the trail is as simple as multiplying the texture color (0 if black and 1 if white) by the vertex's original height.
+Everything is then assembled in "SnowUnlitShader.shader". In the vertex shader, the texture that was drawn on by the compute shader is used to define the vertex height. Creating the trail is as simple as multiplying the texture colour (0 if black and 1 if white) by the vertex's original height.
 
 Parameters are present in the shader to facilitate personalization of the trail final render:
 
@@ -71,7 +71,7 @@ Parameters are present in the shader to facilitate personalization of the trail 
 
 
 ### How to use it
-1. Add the "SnowTrailController" component to the game object that is gonna serve as your snowy ground.
+1. Add the "SnowTrailController" component to the game object that is going to serve as your snowy ground.
 2. Make sure that the snowy ground game object's material uses the "Custom/SnowUnlitShader" shader.
 3. Add the necessary elements to the "SnowTrailController" component in the Unity inspector.
     1. The compute shader
@@ -83,6 +83,6 @@ Parameters are present in the shader to facilitate personalization of the trail 
     2. How much snow is added at each snow filling iteration
     3. How much time (in seconds) in-between each snow filling iteration
 5. Tweak the properties in the Shader (see [Unlit Shader](#unlit-shader-1) section)
-6. Call `SnowTrailController.Instance.DrawSnowTrail(Vector3)`in the script that controls the entity making the trail. Its the function that calls the compute shader and draw the trail on the texture.
+6. Call `SnowTrailController.Instance.DrawSnowTrail(Vector3)`in the script that controls the entity making the trail. It is the function that calls the compute shader and draw the trail on the texture.
 
-And there it is! All thats left is to click the Play button and enjoy the trail that your player leaves in the snow's mesh.
+And there it is! All that's left is to click the Play button and enjoy the trail that your player leaves in the snow's mesh.
